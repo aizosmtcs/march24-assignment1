@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Users</title>
+    <meta name="generator" content="Bootply" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+        <div class="row justify-content-center">
+            <div class = "col-md-8">
+                <h3>Nickname: <%=data.nickname %></h3>
+            <textarea id = "chatMsgThread" cols="100" rows="15" placeholder = "Chat will appear hear"
+            style = "overflow-y: scroll; resize: none;"></textarea>
+            <br>
+            <input type = "hidden" id = "nicknameInput" value = '<%=data.nickname %>'>
+            <br>
+            <textarea id = "chatInput" cols="100" rows="5" placeholder = "Enter your message"
+            style = "resize: none;"></textarea>
+            <br><br>
+            <div class = "row justify-content-center">
+                <button type="button" class="ml-4 btn-primary btn btn-lg btn-block" id="sendChatBtn">Send Chat</button>
+            </div>
+            <script src="/socket.io/socket.io.js"></script>
+                <script>
+                    var socket = io();
+
+                    sendChatBtn.addEventListener('click', function(e) {
+                        console.log('Emitting chat message');
+                        socket.emit('chat', {
+                            nickname: document.getElementById("nicknameInput").value,
+                            chatMsg: document.getElementById("chatInput").value
+                        });
+                    });
+
+                    socket.on('newChat', (data) => {
+                        console.log(data);
+
+                        var msg= data.nickname + ": " + data.message;
+                        document.getElementById("chatMsgThread").value
+                        = document.getElementById("chatMsgThread").value + msg + " \n"; 
+                    });
+                </script>
+            </div>
+        </div>
+  </div>
+</body>
+</html>
